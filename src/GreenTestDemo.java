@@ -14,16 +14,16 @@ public class GreenTestDemo {
 
         populateInputToGraphs(inputArray);
         
-        LinkedList<Vertex> visited = new LinkedList<>();
-        
-        Vertex v11 = new Vertex("C");
-        Vertex v12 = new Vertex("C");
+//        LinkedList<Vertex> visited = new LinkedList<>();
+//        
+//        Vertex v11 = new Vertex("C");
+//        Vertex v12 = new Vertex("C");
+//
+//       
+//        System.out.println(gu.getNumberOfEveryTrip(v11,v12, visited, 0));
 
-       
-        System.out.println(gu.getNumberOfEveryTrip(v11,v12, visited, 0));
-
-//        welcome();
-//        init();
+        welcome();
+        init();
     }
 
     private static void init() {
