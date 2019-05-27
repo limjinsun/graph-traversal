@@ -14,7 +14,7 @@ No need any prerequisite
 
 ## Authors
 
-2019 Jin Lim.
+▶︎ 2019 Jin Lim.
 
 ## License
 
