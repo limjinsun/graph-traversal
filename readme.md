@@ -1,6 +1,6 @@
 # Graph traversal 
 
-Demonstate how weighed edge graph can be structured and how to travarsal.
+Demonstrate how weighted edge graph can be structured and how to traversal.
 
 ### Prerequisites
 

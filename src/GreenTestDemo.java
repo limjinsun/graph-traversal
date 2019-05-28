@@ -11,17 +11,8 @@ public class GreenTestDemo {
     private static GraphUtils gu = new GraphUtils((HashMap) myGraph.getIrishRailStationsInfoMap());
 
     public static void main(String[] args) {
-
         populateInputToGraphs(inputArray);
         
-//        LinkedList<Vertex> visited = new LinkedList<>();
-//        
-//        Vertex v11 = new Vertex("C");
-//        Vertex v12 = new Vertex("C");
-//
-//       
-//        System.out.println(gu.getNumberOfEveryTrip(v11,v12, visited, 0));
-
         welcome();
         init();
     }
@@ -220,7 +211,12 @@ public class GreenTestDemo {
         enter();
         enter();
         PRINT("TᕼE ᗩᑎᔕᗯEᖇ Iᔕ..");
-        System.out.println(gu.getDistanceOfROUTE("A-E-D"));
+        LinkedList<Vertex> visited = new LinkedList<>();
+        
+        Vertex v11 = new Vertex("C");
+        Vertex v12 = new Vertex("C");
+        
+        System.out.println(gu.getNumberOfEveryTrip(v11,v12, visited, 30));
         PRINT("︽︽︽︽︽︽︽︽︽︽︽︽︽︽︽︽︽︽︽︽︽︽︽︽︽︽︽︽︽︽︽︽︽︽︽︽︽︽︽︽︽︽︽︽︽︽︽︽︽︽︽︽︽︽︽︽︽︽︽︽︽︽︽︽︽︽︽︽︽︽︽︽");
     }
 

@@ -12,7 +12,6 @@ public class GraphUtils {
     private ArrayList<String> routes = new ArrayList<>();
 
 
-
     // Return boolean value if two vertexes Connected.
     public boolean isConnected(Vertex source, Vertex destination) {
         if (irishRailStationsInfoMap.containsKey(source)) {
@@ -34,7 +33,6 @@ public class GraphUtils {
         }
         return result;
     }
-
 
 
 
@@ -80,11 +78,11 @@ public class GraphUtils {
 
         // Repeat till every vertex visited. using recursive.
         for (Vertex v : nextStopList) {
-
-            if(!visited.contains(v) && visited.size() < maximumHop + 1) {
+        	
+            if(!visited.contains(v) && visited.size() < maximumHop + 1) { // not allow to visit to visited vertex.
                 visited.add(v);
                 getNumberOfTripsMaxHop(v, end, visited, maximumHop); // recursive
-                visited.remove(v); // important* - removing vertex -> to make it visit previous options.
+                visited.removeLast(); // important* - removing vertex -> to make it visit previous options in the nextStopList.
             }
 
             /*  Filtering selected paths.
@@ -117,14 +115,10 @@ public class GraphUtils {
 
         for (Vertex v : nextStopList) {
 
-            if(!visited.contains(v) && visited.size() < exactHob) { // Limiting the size of list - preventing stack overflow.
+            if (visited.size() < exactHob) { // Limiting the size of list - preventing stack overflow.
                 visited.add(v);
                 getNumberOfTripExactHop(v, end, visited, exactHob); // recursive
-                visited.remove(v); // important* - removing vertex from visited list -> to make it visit previous options.
-            } else if (visited.contains(v) && visited.size() < exactHob) { // Allow to revisit visited hob.
-                visited.add(v);
-                getNumberOfTripExactHop(v, end, visited, exactHob);
-                visited.remove(v);
+                visited.removeLast(); // important* - removing vertex from visited list -> to make it visit previous options.
             }
 
             if (v.equals(end) && visited.size() == exactHob){ // Hop has to be match.
@@ -139,8 +133,7 @@ public class GraphUtils {
     }
 
 
-
-
+    
     // Getting shortest path between to Vertex.
     // Dijkstra’s – Shortest Path Algorithm Used. - https://en.wikipedia.org/wiki/Dijkstra%27s_algorithm
     public String getShortestPath(Vertex start, Vertex end) {
@@ -175,7 +168,8 @@ public class GraphUtils {
                     dijkstraMap.put(v,dijkstraMap.get(temp) + getDistanceOfVT(temp,v));
                     v.dijkstraValue = dijkstraMap.get(temp) + getDistanceOfVT(temp,v);
                     que.add(v);
-                } else if (dijkstraMap.get(v) == 0){ // Force to get distance for starting point (when it's possible.) otherwise it shows value "0"
+                // If vertex is temp (== Start vertex) (dijkstraMap.put(temp, 0)), Force to get distance of multiple trip (if possible) 
+                } else if (dijkstraMap.get(v) == 0){ 
                     dijkstraMap.put(v,dijkstraMap.get(temp) + getDistanceOfVT(temp,v));
                     v.dijkstraValue = dijkstraMap.get(temp) + getDistanceOfVT(temp,v);
                 }
@@ -193,52 +187,49 @@ public class GraphUtils {
 
     }
 
-
-    /** Haven't finished **/
-    public int getNumberOfEveryTrip (Vertex start, Vertex end, LinkedList<Vertex> visited, int i) {
-        //System.out.println("--- Start : " + start);
-        //System.out.println("List ------- : " + visited);
-
+    
+    private HashSet<String> routeSet = new HashSet<>();
+    
+	// Get Number of EveryTrip 
+    public int getNumberOfEveryTrip (Vertex start, Vertex end, LinkedList<Vertex> visited, int maximumCost) {
         Vertex temp = start;
 
         if(visited.size() == 0){
-            System.out.println("▶ Head Added with " + start);
             visited.add(temp);
         }
 
         LinkedList<Vertex> nextStopList = new LinkedList<>();
         irishRailStationsInfoMap.get(temp).entrySet().stream().forEach(e -> nextStopList.add(e.getKey()));
-        //System.out.println("nextStopList : " + nextStopList);
 
         for (Vertex v : nextStopList){
-            System.out.println("Current vertex : " + v);
-
-            if(!visited.contains(v) && visited.size() < 8) {
-                visited.add(v);
-                System.out.println("List ------- : " + visited);
-                getNumberOfEveryTrip(v, end, visited, i);
-                visited.remove();
+        	
+        	// Limited trip to 20 hops, can't be infinite. 
+            	if(visited.size() < 20) {
+            		visited.add(v);
+                getNumberOfEveryTrip(v, end, visited, maximumCost);
+                visited.removeLast();
+            	}
+            	
+            	// If last vertex is matched with 'End' and not a 'Start' vertex.
+            	if (visited.size() > 1 && visited.getLast().equals(end)) {
+                int totalCost = 0;
+            		for (int x = 0; x < visited.size() - 1 ; x++) {
+            			totalCost += getDistanceOfVT(visited.get(x),visited.get(x+1));
+            		}
+            		if (totalCost < maximumCost) { 
+            			if(routeSet.add(visited.toString())) {
+            				printList(visited);
+            			};
+            		}
             }
-            else if (visited.contains(v) && visited.size() < 8 ) {
-                visited.add(v);
-                System.out.println("List ------- : " + visited);
-                //getNumberOfEveryTrip(v, end, visited, i);
-            }
-
         }
-
-        if(visited.size() > 0){
-            //System.out.println("last index : " + start);
-            //visited.remove();
-        }
-
-        //System.out.println("--- Function -- End --- temp : " + temp);
-        return 0;
+        
+        return routeSet.size();
     }
-
-
-
-
+    
+    
+    
+    
     /*****************/
     // helper method.
     void printList (LinkedList<Vertex> list)  {
@@ -248,5 +239,11 @@ public class GraphUtils {
         System.out.println();
     }
 
+
+
+	public HashSet<String> getRouteSet() {
+		return routeSet;
+	}
+   
 
 }
